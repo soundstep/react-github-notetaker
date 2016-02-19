@@ -4,7 +4,6 @@ var React = require('react');
 
 var UserProfile = React.createClass({
     render: function() {
-        console.log('--', this.props.bio);
         return (
             <div>
                 <p>USER PROFILE</p>

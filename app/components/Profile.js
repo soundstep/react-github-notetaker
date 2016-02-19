@@ -22,7 +22,7 @@ var Profile = React.createClass({
     componentDidMount: function() {
         this.ref = new Firebase('https://soundstep-notetaker.firebaseio.com/');
         var childRef = this.ref.child(this.props.params.username);
-        this.bindAsArray(this.ref, 'notes');
+        this.bindAsArray(childRef, 'notes');
     },
     componentWillUnmount: function() {
         this.unbind('notes');

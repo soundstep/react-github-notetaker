@@ -12,7 +12,7 @@ var SearchRouter = React.createClass({
     handleSubmit: function() {
         var username = this.usernameRef.value;
         this.usernameRef.value = '';
-        this.context.router.pushState(null, 'profile/' + username);
+        this.context.router.push('/profile/' + username);
     },
     render: function() {
         return (

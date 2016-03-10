@@ -20,21 +20,27 @@ var Profile = React.createClass({
             repos: ['a', 'b', 'c']
         };
     },
-    componentWillMount: function() {
-        helpers.getGithubInfo(this.props.params.username).then(function(data) {
+    componentDidMount: function() {
+        this.ref = new Firebase('https://soundstep-notetaker.firebaseio.com/');
+        this.init(this.props.params.username);
+    },
+    componentWillReceiveProps: function(nextProps) {
+        this.unbind('notes');
+        this.init(nextProps.params.username);
+    },
+    componentWillUnmount: function() {
+        this.unbind('notes');
+    },
+    init: function(username) {
+        var childRef = this.ref.child(username);
+        this.bindAsArray(childRef, 'notes');
+
+        helpers.getGithubInfo(username).then(function(data) {
             this.setState({
                 bio: data.bio,
                 repos: data.repos
             });
         }.bind(this));
-    },
-    componentDidMount: function() {
-        this.ref = new Firebase('https://soundstep-notetaker.firebaseio.com/');
-        var childRef = this.ref.child(this.props.params.username);
-        this.bindAsArray(childRef, 'notes');
-    },
-    componentWillUnmount: function() {
-        this.unbind('notes');
     },
     handleAddNote: function(newNote) {
         this.ref

@@ -24761,7 +24761,7 @@
 	    handleSubmit: function handleSubmit() {
 	        var username = this.usernameRef.value;
 	        this.usernameRef.value = '';
-	        this.context.router.pushState(null, 'profile/' + username);
+	        this.context.router.push('/profile/' + username);
 	    },
 	    render: function render() {
 	        return React.createElement(
@@ -24841,21 +24841,27 @@
 	            repos: ['a', 'b', 'c']
 	        };
 	    },
-	    componentWillMount: function componentWillMount() {
-	        helpers.getGithubInfo(this.props.params.username).then(function (data) {
+	    componentDidMount: function componentDidMount() {
+	        this.ref = new Firebase('https://soundstep-notetaker.firebaseio.com/');
+	        this.init(this.props.params.username);
+	    },
+	    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	        this.unbind('notes');
+	        this.init(nextProps.params.username);
+	    },
+	    componentWillUnmount: function componentWillUnmount() {
+	        this.unbind('notes');
+	    },
+	    init: function init(username) {
+	        var childRef = this.ref.child(username);
+	        this.bindAsArray(childRef, 'notes');
+
+	        helpers.getGithubInfo(username).then(function (data) {
 	            this.setState({
 	                bio: data.bio,
 	                repos: data.repos
 	            });
 	        }.bind(this));
-	    },
-	    componentDidMount: function componentDidMount() {
-	        this.ref = new Firebase('https://soundstep-notetaker.firebaseio.com/');
-	        var childRef = this.ref.child(this.props.params.username);
-	        this.bindAsArray(childRef, 'notes');
-	    },
-	    componentWillUnmount: function componentWillUnmount() {
-	        this.unbind('notes');
 	    },
 	    handleAddNote: function handleAddNote(newNote) {
 	        this.ref.child(this.props.params.username).child(this.state.notes.length).set(newNote);
@@ -24906,9 +24912,22 @@
 	    render: function render() {
 	        var repos = this.props.repos.map(function (repo, index) {
 	            return React.createElement(
-	                'p',
-	                { key: index },
-	                repo.name
+	                'li',
+	                { className: 'list-group-item', key: index },
+	                repo.html_url && React.createElement(
+	                    'h4',
+	                    null,
+	                    React.createElement(
+	                        'a',
+	                        { href: repo.html_url },
+	                        repo.name
+	                    )
+	                ),
+	                repo.description && React.createElement(
+	                    'p',
+	                    null,
+	                    repo.description
+	                )
 	            );
 	        });
 	        return React.createElement(
@@ -24948,24 +24967,74 @@
 	        bio: React.PropTypes.object.isRequired
 	    },
 	    render: function render() {
+	        var bio = this.props.bio;
 	        return React.createElement(
 	            'div',
 	            null,
-	            React.createElement(
-	                'p',
-	                null,
-	                'USER PROFILE'
+	            bio.avatar_url && React.createElement(
+	                'li',
+	                { className: 'list-group-item' },
+	                ' ',
+	                React.createElement('img', { src: bio.avatar_url, className: 'img-rounded img-responsive' })
 	            ),
-	            React.createElement(
-	                'p',
-	                null,
+	            bio.name && React.createElement(
+	                'li',
+	                { className: 'list-group-item' },
+	                'Name: ',
+	                bio.name
+	            ),
+	            bio.login && React.createElement(
+	                'li',
+	                { className: 'list-group-item' },
 	                'Username: ',
-	                this.props.username
+	                bio.login
 	            ),
-	            React.createElement(
-	                'pre',
-	                null,
-	                this.props.bio.name
+	            bio.email && React.createElement(
+	                'li',
+	                { className: 'list-group-item' },
+	                'Email: ',
+	                bio.email
+	            ),
+	            bio.location && React.createElement(
+	                'li',
+	                { className: 'list-group-item' },
+	                'Location: ',
+	                bio.location
+	            ),
+	            bio.company && React.createElement(
+	                'li',
+	                { className: 'list-group-item' },
+	                'Company: ',
+	                bio.company
+	            ),
+	            bio.followers !== undefined && React.createElement(
+	                'li',
+	                { className: 'list-group-item' },
+	                'Followers: ',
+	                bio.followers
+	            ),
+	            bio.following !== undefined && React.createElement(
+	                'li',
+	                { className: 'list-group-item' },
+	                'Following: ',
+	                bio.following
+	            ),
+	            bio.public_repos && React.createElement(
+	                'li',
+	                { className: 'list-group-item' },
+	                'Public Repos: ',
+	                bio.public_repos
+	            ),
+	            bio.blog && React.createElement(
+	                'li',
+	                { className: 'list-group-item' },
+	                'Blog: ',
+	                React.createElement(
+	                    'a',
+	                    { href: bio.blog },
+	                    ' ',
+	                    bio.blog
+	                )
 	            )
 	        );
 	    }
@@ -25744,8 +25813,8 @@
 	'use strict';
 
 	var axios = __webpack_require__(229);
-	var clientId = '';
-	var clientSecret = '';
+	var clientId = '9a676284b86d2be3c4e3';
+	var clientSecret = 'aedeea33bdc8fece96b489c5dad475b09a92c188';
 
 	function getRepos(username) {
 	    return axios.get('https://api.github.com/users/' + username + '/repos?client_id=' + clientId + '&client_secret=' + clientSecret);

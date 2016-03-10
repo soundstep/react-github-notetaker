@@ -1,13 +1,12 @@
 'use strict';
 
 var React = require('react');
-var Router = require('react-router');
 var Repos = require('./github/Repos');
 var UserProfile = require('./github/UserProfile');
 var Notes = require('./notes/Notes');
 var ReactFireMixin = require('reactfire');
 var Firebase = require('firebase');
-var helpers = require('../utils/helpers');
+import getGithubInfo from '../utils/helpers';
 
 var Profile = React.createClass({
     mixins: [ReactFireMixin],
@@ -35,7 +34,7 @@ var Profile = React.createClass({
         var childRef = this.ref.child(username);
         this.bindAsArray(childRef, 'notes');
 
-        helpers.getGithubInfo(username).then(function(data) {
+        getGithubInfo(username).then(function(data) {
             this.setState({
                 bio: data.bio,
                 repos: data.repos

@@ -7,6 +7,7 @@ var UserProfile = require('./github/UserProfile');
 var Notes = require('./notes/Notes');
 var ReactFireMixin = require('reactfire');
 var Firebase = require('firebase');
+var helpers = require('../utils/helpers');
 
 var Profile = React.createClass({
     mixins: [ReactFireMixin],
@@ -18,6 +19,14 @@ var Profile = React.createClass({
             },
             repos: ['a', 'b', 'c']
         };
+    },
+    componentWillMount: function() {
+        helpers.getGithubInfo(this.props.params.username).then(function(data) {
+            this.setState({
+                bio: data.bio,
+                repos: data.repos
+            });
+        }.bind(this));
     },
     componentDidMount: function() {
         this.ref = new Firebase('https://soundstep-notetaker.firebaseio.com/');

@@ -8,10 +8,14 @@ var Repos = React.createClass({
         repos: React.PropTypes.array.isRequired
     },
     render: function() {
+        var repos = this.props.repos.map(function(repo, index) {
+            return <p key={index}>{repo.name}</p>;
+        });
         return (
             <div>
                 <p>REPOS</p>
-                <p>repos: {this.props.repos}</p>
+                <p>Username: {this.props.username}</p>
+                {repos}
             </div>
         );
     }

@@ -1,17 +1,18 @@
 'use strict';
 
 var React = require('react');
-var Router = require('react-router');
 
 var SearchRouter = React.createClass({
-    mixins: [Router.History],
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
     getRef: function(ref) {
         this.usernameRef = ref;
     },
     handleSubmit: function() {
         var username = this.usernameRef.value;
         this.usernameRef.value = '';
-        this.history.pushState(null, 'profile/' + username);
+        this.context.router.pushState(null, 'profile/' + username);
     },
     render: function() {
         return (

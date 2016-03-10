@@ -25744,8 +25744,8 @@
 	'use strict';
 
 	var axios = __webpack_require__(229);
-	var clientId = '9a676284b86d2be3c4e3';
-	var clientSecret = 'aedeea33bdc8fece96b489c5dad475b09a92c188';
+	var clientId = '';
+	var clientSecret = '';
 
 	function getRepos(username) {
 	    return axios.get('https://api.github.com/users/' + username + '/repos?client_id=' + clientId + '&client_secret=' + clientSecret);

@@ -1,9 +1,9 @@
 'use strict';
 
 var React = require('react');
-var Repos = require('./github/Repos');
-var UserProfile = require('./github/UserProfile');
-var Notes = require('./notes/Notes');
+import Repos from './github/Repos';
+import UserProfile from './github/UserProfile';
+import Notes from './notes/Notes';
 var ReactFireMixin = require('reactfire');
 var Firebase = require('firebase');
 import getGithubInfo from '../utils/helpers';

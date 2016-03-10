@@ -1,14 +1,8 @@
-'use strict';
+import React from 'react';
 
-var React = require('react');
-
-var UserProfile = React.createClass({
-    propTypes: {
-        username: React.PropTypes.string.isRequired,
-        bio: React.PropTypes.object.isRequired
-    },
-    render: function() {
-        var bio = this.props.bio;
+class UserProfile extends React.Component {
+    render() {
+        const { bio} = this.props;
         return (
             <div>
                 {bio.avatar_url && <li className="list-group-item"> <img src={bio.avatar_url} className="img-rounded img-responsive"/></li>}
@@ -24,6 +18,11 @@ var UserProfile = React.createClass({
             </div>
         );
     }
-});
+}
 
-module.exports = UserProfile;
+UserProfile.propTypes = {
+    username: React.PropTypes.string.isRequired,
+    bio: React.PropTypes.object.isRequired
+};
+
+export default UserProfile;

@@ -31,7 +31,7 @@ class Profile extends React.Component {
     init(username) {
         this.ref = base.bindToState(username, {
             context: this,
-            assArray: true,
+            asArray: true,
             state: 'notes'
         });
         getGithubInfo(username).then(function(data) {
@@ -59,7 +59,7 @@ class Profile extends React.Component {
                     <Notes
                         username={this.props.params.username}
                         notes={this.state.notes}
-                        addNote={(newNote) => this.handleAddNote(newNote)}/>
+                        addNote={(newNote) => this.handleAddNote(newNote)} />
                 </div>
             </div>
         );
